@@ -26,10 +26,22 @@ module "alb" {
   alb_sg         = module.security.alb_sg
   vpc_id         = module.vpc.vpc_id
 }
-resource "aws_key_pair" "ec2_key" {
-  key_name   = "strapi-keypair"
-  public_key = file("~/.ssh/id_rsa.pub")
+resource "tls_private_key" "ec2_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
 }
+
+resource "aws_key_pair" "ec2_key" {
+  key_name   = "terraform-ec2-key"
+  public_key = tls_private_key.ec2_key.public_key_openssh
+}
+
+resource "local_file" "private_key" {
+  filename        = "${path.module}/terraform-ec2-key.pem"
+  content         = tls_private_key.ec2_key.private_key_pem
+  file_permission = "0400"
+}
+
 
 resource "aws_vpc_endpoint" "ssm" {
   vpc_id            = module.vpc.vpc_id
@@ -80,20 +92,4 @@ resource "aws_security_group" "ssm_endpoint_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-}
-
-resource "tls_private_key" "ec2_key" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
-resource "aws_key_pair" "ec2_key" {
-  key_name   = "terraform-ec2-key"
-  public_key = tls_private_key.ec2_key.public_key_openssh
-}
-
-resource "local_file" "private_key" {
-  filename        = "${path.module}/terraform-ec2-key.pem"
-  content         = tls_private_key.ec2_key.private_key_pem
-  file_permission = "0400"
 }
