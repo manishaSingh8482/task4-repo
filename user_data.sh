@@ -1,12 +1,14 @@
 #!/bin/bash
-set -e
+set -eux
 
-# Update system
+# Enable universe repo (required on Ubuntu 22.04)
+add-apt-repository universe -y || true
+
+# Update packages
 apt update -y
 
-# Install SSM Agent (force install to be safe)
+# Install SSM Agent (safe even if already installed)
 snap install amazon-ssm-agent --classic || true
-
 systemctl enable snap.amazon-ssm-agent.amazon-ssm-agent
 systemctl start snap.amazon-ssm-agent.amazon-ssm-agent
 
@@ -15,15 +17,16 @@ apt install -y docker.io
 
 systemctl start docker
 systemctl enable docker
+usermod -aG docker ubuntu
 
-# Create Docker network
+# Docker network
 docker network create strapi-net || true
 
-# Create volumes
-docker volume create strapi-db
-docker volume create strapi-app
+# Volumes
+docker volume create strapi-db || true
+docker volume create strapi-app || true
 
-# Run PostgreSQL
+# PostgreSQL
 docker run -d \
   --name postgres \
   --network strapi-net \
@@ -34,7 +37,7 @@ docker run -d \
   --restart unless-stopped \
   postgres:14
 
-# Run Strapi (PINNED VERSION)
+# Strapi
 docker run -d \
   --name strapi \
   --network strapi-net \
