@@ -18,12 +18,15 @@ module "ec2" {
   instance_type     = var.instance_type
   private_subnet_id = module.vpc.private_subnets[0]
   ec2_sg            = module.security.ec2_sg
-  key_name          = var.key_name
+  key_name          = aws_key_pair.ec2_key.key_name
 }
-
 module "alb" {
   source         = "./modules/alb"
   public_subnets = module.vpc.public_subnets
   alb_sg         = module.security.alb_sg
   vpc_id         = module.vpc.vpc_id
+}
+resource "aws_key_pair" "ec2_key" {
+  key_name   = "strapi-keypair"
+  public_key = file("~/.ssh/id_rsa.pub")
 }

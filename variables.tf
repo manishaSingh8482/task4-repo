@@ -11,6 +11,6 @@ variable "private_subnets" {
 }
 
 variable "instance_type" {}
-variable "key_name" {}
+
 
 variable "allowed_ssh_ip" {}
