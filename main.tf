@@ -13,7 +13,8 @@ module "security" {
 }
 
 module "ec2" {
-  source            = "./modules/ec2"
+  source = "./modules/ec2"
+
   instance_type     = var.instance_type
   private_subnet_id = module.vpc.private_subnets[0]
   ec2_sg            = module.security.ec2_sg
