@@ -14,6 +14,7 @@ variable "ec2_sg" {
 }
 
 variable "key_name" {
-  description = "SSH key name"
   type        = string
+  description = "SSH key pair name for EC2"
 }
+

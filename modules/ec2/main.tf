@@ -34,7 +34,7 @@ resource "aws_instance" "this" {
   instance_type          = var.instance_type
   subnet_id              = var.private_subnet_id
   vpc_security_group_ids = [var.ec2_sg]
-  key_name               = aws_key_pair.ec2_key.key_name
+  key_name = var.key_name
 
   iam_instance_profile = aws_iam_instance_profile.this.name
   user_data            = file("${path.root}/user_data.sh")
