@@ -1,16 +1,16 @@
-variable "aws_region" {
-  type    = string
-  default = "ap-south-1"
+variable "aws_region" {}
+variable "project_name" {}
+variable "vpc_cidr" {}
+
+variable "public_subnets" {
+  type = list(string)
 }
 
-variable "vpc_cidr" {
-  type = string
+variable "private_subnets" {
+  type = list(string)
 }
 
-variable "instance_type" {
-  type = string
-}
+variable "instance_type" {}
+variable "key_name" {}
 
-variable "ami" {
-  type = string
-}
+variable "allowed_ssh_ip" {}
