@@ -1,28 +1,33 @@
 #!/bin/bash
 set -eux
 
-# Enable universe repo (required on Ubuntu 22.04)
-add-apt-repository universe -y || true
+# Force IPv4 for apt (CRITICAL FIX)
+echo 'Acquire::ForceIPv4 "true";' > /etc/apt/apt.conf.d/99force-ipv4
 
-# Update packages
-apt update -y
+# Update package lists
+apt-get update -y
 
-# Install SSM Agent (safe even if already installed)
-snap install amazon-ssm-agent --classic || true
-systemctl enable snap.amazon-ssm-agent.amazon-ssm-agent
-systemctl start snap.amazon-ssm-agent.amazon-ssm-agent
+# Install required packages
+apt-get install -y \
+  ca-certificates \
+  curl \
+  gnupg \
+  lsb-release
 
-# Install Docker
-apt install -y docker.io
+# Install Docker (Ubuntu-supported method)
+apt-get install -y docker.io
 
 systemctl start docker
 systemctl enable docker
 usermod -aG docker ubuntu
 
-# Docker network
-docker network create strapi-net || true
+# Install SSM agent (safe if already present)
+snap install amazon-ssm-agent --classic || true
+systemctl enable snap.amazon-ssm-agent.amazon-ssm-agent
+systemctl start snap.amazon-ssm-agent.amazon-ssm-agent
 
-# Volumes
+# Docker network & volumes
+docker network create strapi-net || true
 docker volume create strapi-db || true
 docker volume create strapi-app || true
 

@@ -38,6 +38,7 @@ resource "aws_instance" "this" {
 
   iam_instance_profile = aws_iam_instance_profile.this.name
   user_data            = file("${path.root}/user_data.sh")
+  user_data_replace_on_change = true   
 
   tags = {
     Name = "strapi-private-ec2"
