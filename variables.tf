@@ -1,4 +1,7 @@
-variable "aws_region" {}
+variable "region" {
+  type = string
+}
+
 variable "project_name" {}
 variable "vpc_cidr" {}
 

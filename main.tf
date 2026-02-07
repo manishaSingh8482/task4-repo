@@ -30,3 +30,35 @@ resource "aws_key_pair" "ec2_key" {
   key_name   = "strapi-keypair"
   public_key = file("~/.ssh/id_rsa.pub")
 }
+
+resource "aws_vpc_endpoint" "ssm" {
+  vpc_id            = module.vpc.vpc_id
+  service_name      = "com.amazonaws.${var.region}.ssm"
+  vpc_endpoint_type = "Interface"
+
+  subnet_ids         = module.vpc.private_subnets
+  security_group_ids = [aws_security_group.ssm_endpoint_sg.id]
+
+  private_dns_enabled = true
+}
+resource "aws_vpc_endpoint" "ec2messages" {
+  vpc_id            = module.vpc.vpc_id
+  service_name      = "com.amazonaws.${var.region}.ec2messages"
+  vpc_endpoint_type = "Interface"
+
+  subnet_ids         = module.vpc.private_subnets
+  security_group_ids = [aws_security_group.ssm_endpoint_sg.id]
+
+  private_dns_enabled = true
+}
+
+resource "aws_vpc_endpoint" "ssmmessages" {
+  vpc_id            = module.vpc.vpc_id
+  service_name      = "com.amazonaws.${var.region}.ssmmessages"
+  vpc_endpoint_type = "Interface"
+
+  subnet_ids         = module.vpc.private_subnets
+  security_group_ids = [aws_security_group.ssm_endpoint_sg.id]
+
+  private_dns_enabled = true
+}
