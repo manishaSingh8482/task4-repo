@@ -35,3 +35,48 @@ Internet → ALB → Private EC2 → Strapi (Port 1337)
 1. Configure AWS credentials
 ```bash
 aws configure
+
+
+Initialize Terraform
+
+terraform init
+
+
+Review plan
+
+terraform plan
+
+
+Deploy infrastructure
+
+terraform apply
+
+
+Get ALB URL
+
+terraform output alb_dns
+
+
+Open Strapi Admin
+
+http://<alb-dns>/admin
+
+Security Features
+
+EC2 has no public IP
+
+Only ALB can access application
+
+Managed via IAM + SSM
+
+Secrets injected via environment variables
+
+Lessons Learned
+
+Private applications must be accessed via ALB
+
+Strapi requires APP_KEYS in production
+
+Health checks must match application port
+
+Dockerized apps simplify infrastructure automation
