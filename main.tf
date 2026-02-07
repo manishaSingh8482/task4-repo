@@ -7,11 +7,11 @@ module "vpc" {
 }
 
 module "security" {
-  source          = "./modules/security"
-  vpc_id          = module.vpc.vpc_id
-  allowed_ssh_ip  = var.allowed_ssh_ip
-}
+  source = "./modules/security"
 
+  vpc_id         = module.vpc.vpc_id
+  allowed_ssh_ip = var.allowed_ssh_ip
+}
 module "ec2" {
   source = "./modules/ec2"
 
