@@ -4,6 +4,12 @@ set -e
 # Update system
 apt update -y
 
+# Install SSM Agent (force install to be safe)
+snap install amazon-ssm-agent --classic || true
+
+systemctl enable snap.amazon-ssm-agent.amazon-ssm-agent
+systemctl start snap.amazon-ssm-agent.amazon-ssm-agent
+
 # Install Docker
 apt install -y docker.io
 
